@@ -12,7 +12,7 @@
     <h2>Getting Started</h2>
     <p>To run this app, you will need to have <a href="https://flutter.dev/">Flutter</a> installed on your machine. Then, follow these steps:</p>
     <ol>
-      <li>Clone this repository: <code>git clone https://github.com/your-username/bmi-calculator.git</code></li>
+      <li>Clone this repository: <code>git clone https://github.com/astonish2c/flutter-bmi.git</code></li>
       <li>Navigate to the project directory: <code>cd bmi-calculator</code></li>
       <li>Install dependencies: <code>flutter pub get</code></li>
       <li>Run the app: <code>flutter run</code></li>

@@ -5,24 +5,24 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class HeightSlider extends StatelessWidget {
-  HeightSlider({
+class WeightSlider extends StatelessWidget {
+  WeightSlider({
     super.key,
     required this.minValue,
     required this.maxValue,
-    required this.value,
+    required this.initialHeight,
     required this.onChanged,
-    required this.width,
-  }) : scrollController = ScrollController(initialScrollOffset: (value - minValue) * width / 3);
+    required this.itemWidth,
+  }) : scrollController = ScrollController(initialScrollOffset: (initialHeight - minValue) * itemWidth);
 
   final int minValue;
   final int maxValue;
-  final int value;
+  final int initialHeight;
   final ValueChanged<int> onChanged;
-  final double width;
+  final double itemWidth;
   final ScrollController scrollController;
 
-  double get itemExtent => width;
+  double get itemExtent => itemWidth;
 
   int _indexToValue(int index) => minValue + (index - 1);
 
@@ -46,28 +46,12 @@ class HeightSlider extends StatelessWidget {
               : GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => _animateTo(itemValue, durationMillis: 50),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: FittedBox(
-                          child: Text(
-                            itemValue.toString(),
-                            style: _getTextStyle(context, itemValue),
-                          ),
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Expanded(
-                        flex: itemValue == value ? 3 : 1,
-                        child: Container(
-                          width: itemValue == value ? 2 : 1,
-                          decoration: BoxDecoration(
-                            color: itemValue == value ? Colors.orange : Colors.black26,
-                          ),
-                        ),
-                      )
-                    ],
+                  child: FittedBox(
+                    child: Text(
+                      itemValue.toString(),
+                      style: _getTextStyle(context, itemValue),
+                    ),
+                    fit: BoxFit.scaleDown,
                   ),
                 );
         },
@@ -91,7 +75,7 @@ class HeightSlider extends StatelessWidget {
   }
 
   TextStyle _getTextStyle(BuildContext context, int itemValue) {
-    return itemValue == value ? _getHighlightTextStyle(context) : _getDefaultTextStyle();
+    return itemValue == initialHeight ? _getHighlightTextStyle(context) : _getDefaultTextStyle();
   }
 
   bool _userStoppedScrolling(Notification notification) {
@@ -107,7 +91,7 @@ class HeightSlider extends StatelessWidget {
     );
   }
 
-  int _offsetToMiddleIndex(double offset) => (offset + (width * 1.5)) ~/ itemExtent;
+  int _offsetToMiddleIndex(double offset) => (offset + (itemWidth * 1.5)) ~/ itemExtent;
 
   int _offsetToMiddleValue(double offset) {
     int indexOfMiddleElement = _offsetToMiddleIndex(offset);
@@ -124,7 +108,7 @@ class HeightSlider extends StatelessWidget {
         _animateTo(middleValue);
       }
 
-      if (middleValue != value) {
+      if (middleValue != initialHeight) {
         onChanged(middleValue); //update selection
       }
     }

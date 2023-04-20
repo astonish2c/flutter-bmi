@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/screens/custom_widgets/custom_container.dart';
-import '/screens/custom_widgets/weight_slider.dart';
+import '../widgets/weight_slider.dart';
 
 class WeightSection extends StatelessWidget {
   const WeightSection({super.key, required this.weight, required this.changeWeight});
@@ -23,31 +23,31 @@ class WeightSection extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const Spacer(),
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(244, 244, 244, 1.0),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.black12,
+            const SizedBox(height: 24),
+            Expanded(
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(244, 244, 244, 1.0),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black26, blurRadius: 1),
+                      ],
+                    ),
+                    child: WeightSlider(
+                      itemWidth: 40,
+                      minValue: 1,
+                      maxValue: 250,
+                      onChanged: (val) => changeWeight(val),
+                      initialHeight: weight!,
                     ),
                   ),
-                  child: WeightSlider(
-                    width: 40,
-                    minValue: 1,
-                    maxValue: 250,
-                    onChanged: (val) => changeWeight(val),
-                    value: weight!,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const Spacer(),
+            const SizedBox(height: 24),
           ],
         ),
       ),

@@ -12,11 +12,11 @@ class CustomContainer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 2),
+        ],
       ),
       child: child,
     );

@@ -5,30 +5,30 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class WeightSlider extends StatelessWidget {
-  WeightSlider({
+class HeightSlider extends StatelessWidget {
+  HeightSlider({
     super.key,
     required this.minValue,
     required this.maxValue,
-    required this.value,
-    required this.onChanged,
-    required this.width,
-  }) : scrollController = ScrollController(initialScrollOffset: (value - minValue) * width / 3);
+    required this.initialHeight,
+    required this.onHeightChanged,
+    required this.itemWidth,
+  }) : scrollController = ScrollController(initialScrollOffset: (initialHeight - minValue) * itemWidth); // 104
 
   final int minValue;
   final int maxValue;
-  final int value;
-  final ValueChanged<int> onChanged;
-  final double width;
+  final int initialHeight;
+  final ValueChanged<int> onHeightChanged;
+  final double itemWidth;
   final ScrollController scrollController;
 
-  double get itemExtent => width;
+  double get itemExtent => itemWidth; //100
 
-  int _indexToValue(int index) => minValue + (index - 1);
+  int _indexToValue(int index) => minValue + (index - 1); //index
 
   @override
   build(BuildContext context) {
-    int itemCount = (maxValue - minValue) + 3;
+    int itemCount = (maxValue - minValue) + 3; // 252
     return NotificationListener(
       onNotification: _onNotification,
       child: ListView.builder(
@@ -38,20 +38,36 @@ class WeightSlider extends StatelessWidget {
         itemCount: itemCount,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          int itemValue = _indexToValue(index);
-          bool isExtra = index == 0 || index == itemCount - 1;
+          int itemValue = _indexToValue(index); // index
+          bool isExtra = index == 0 || index == itemCount - 1; //0 and after 250
 
           return isExtra
               ? Container() //empty first and last element
               : GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => _animateTo(itemValue, durationMillis: 50),
-                  child: FittedBox(
-                    child: Text(
-                      itemValue.toString(),
-                      style: _getTextStyle(context, itemValue),
-                    ),
-                    fit: BoxFit.scaleDown,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: FittedBox(
+                          child: Text(
+                            itemValue.toString(),
+                            style: _getTextStyle(context, itemValue),
+                          ),
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        flex: itemValue == initialHeight ? 3 : 1,
+                        child: Container(
+                          width: itemValue == initialHeight ? 2 : 1,
+                          decoration: BoxDecoration(
+                            color: itemValue == initialHeight ? Colors.orange : Colors.black26,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 );
         },
@@ -75,7 +91,7 @@ class WeightSlider extends StatelessWidget {
   }
 
   TextStyle _getTextStyle(BuildContext context, int itemValue) {
-    return itemValue == value ? _getHighlightTextStyle(context) : _getDefaultTextStyle();
+    return itemValue == initialHeight ? _getHighlightTextStyle(context) : _getDefaultTextStyle();
   }
 
   bool _userStoppedScrolling(Notification notification) {
@@ -91,7 +107,7 @@ class WeightSlider extends StatelessWidget {
     );
   }
 
-  int _offsetToMiddleIndex(double offset) => (offset + (width * 1.5)) ~/ itemExtent;
+  int _offsetToMiddleIndex(double offset) => (offset + (itemWidth * 1.5)) ~/ itemExtent;
 
   int _offsetToMiddleValue(double offset) {
     int indexOfMiddleElement = _offsetToMiddleIndex(offset);
@@ -108,8 +124,8 @@ class WeightSlider extends StatelessWidget {
         _animateTo(middleValue);
       }
 
-      if (middleValue != value) {
-        onChanged(middleValue); //update selection
+      if (middleValue != initialHeight) {
+        onHeightChanged(middleValue); //update selection
       }
     }
     return true;
